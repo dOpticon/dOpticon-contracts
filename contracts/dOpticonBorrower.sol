@@ -39,8 +39,12 @@ contract dOpticonBorrower is ERC20, ERC20Burnable {
             return 0;
         }
         uint256 utilization = getUtilization(debt, total);
-        uint256 sqrt = 1e18 - (1e36 - utilization**2).sqrt();
-        return (sqrt * 3) / 2;
+        if (utilization < 1e18) {
+            uint256 sqrt = 1e18 - (1e36 - utilization**2).sqrt();
+            return (sqrt * 3) / 2;
+        } else {
+            return (1e18 * 3) / 2;
+        }
     }
 
     function getUtilization(uint256 debt, uint256 total)
@@ -73,11 +77,12 @@ contract dOpticonBorrower is ERC20, ERC20Burnable {
         token.transfer(msg.sender, tokenAmount);
     }
 
+    /*
     function borrow(uint256 amount) public update(0) {
         token.transfer(msg.sender, amount);
         totalBorrowed += amount;
     }
-
+    */
     function totalToken() public view returns (uint256) {
         return token.balanceOf(address(this)) + totalBorrowed;
     }
@@ -90,6 +95,8 @@ contract dOpticonBorrower is ERC20, ERC20Burnable {
                 ((getBorrowAPR(totalBorrowed, balance) / ONE_YEAR) *
                     timePast *
                     totalBorrowed) / 1e18;
+        } else {
+            return 0;
         }
     }
 }
