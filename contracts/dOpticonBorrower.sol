@@ -1,4 +1,4 @@
-pragma solidity ^0.8.0;
+pragma solidity >=0.5.0;
 
 import "@openzeppelin/contracts/utils/math/Math.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
@@ -30,39 +30,35 @@ contract dOpticonBorrower is ERC20, ERC20Burnable {
         lastAction = block.timestamp;
     }
 
-    function getBorrowAPR(uint256 debt, uint256 total)
-        internal
-        pure
-        returns (uint256)
-    {
+    function getBorrowAPR(
+        uint256 debt,
+        uint256 total
+    ) internal pure returns (uint256) {
         if (total == 0) {
             return 0;
         }
         uint256 utilization = getUtilization(debt, total);
         if (utilization < 1e18) {
-            uint256 sqrt = 1e18 - (1e36 - utilization**2).sqrt();
+            uint256 sqrt = 1e18 - (1e36 - utilization ** 2).sqrt();
             return (sqrt * 3) / 2;
         } else {
             return (1e18 * 3) / 2;
         }
     }
 
-    function getUtilization(uint256 debt, uint256 total)
-        internal
-        pure
-        returns (uint256)
-    {
+    function getUtilization(
+        uint256 debt,
+        uint256 total
+    ) internal pure returns (uint256) {
         if (total == 0) {
             return 0;
         }
         return ((debt * 1e18) / total);
     }
 
-    function deposit(uint256 amount)
-        public
-        transferToken(amount)
-        update(amount)
-    {
+    function deposit(
+        uint256 amount
+    ) public transferToken(amount) update(amount) {
         _mint(
             msg.sender,
             (totalToken() - amount) == 0
