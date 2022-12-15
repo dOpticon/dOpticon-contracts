@@ -12,6 +12,8 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@openzeppelin/contracts": "^4.8.0"
+    "@openzeppelin/contracts": "^4.8.0",
+    "@uniswap/v3-core": "github:Uniswap/v3-core#0.8",
+    "@uniswap/v3-periphery": "github:Uniswap/v3-periphery#0.8"
   }
 }
